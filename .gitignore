@@ -1,0 +1,33 @@
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Java / Maven
+**/target/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Local env and secrets
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.jks
+
+# Data files (do not push)
+*.db
+*.sqlite
+*.sqlite3
+*.nc
+backend/src/main/resources/data.sql
+frontend/public/demo/
