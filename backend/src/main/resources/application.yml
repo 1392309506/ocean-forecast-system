@@ -1,18 +1,8 @@
 spring:
   application:
     name: ocean-forecast-backend
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:ocean_forecast;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
-    password:
-  sql:
-    init:
-      mode: always
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:h2}
 
 mybatis:
   configuration:
@@ -27,3 +17,37 @@ logging:
   level:
     root: INFO
     com.ocean.forecast: INFO
+
+---
+spring:
+  config:
+    activate:
+      on-profile: h2
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:ocean_forecast;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+  sql:
+    init:
+      mode: always
+      schema-locations: optional:file:../data/schema.sql
+      data-locations: optional:file:../data/data.sql
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+---
+spring:
+  config:
+    activate:
+      on-profile: mysql
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST:127.0.0.1}:${DB_PORT:3306}/${DB_NAME:ocean}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
+  sql:
+    init:
+      mode: never

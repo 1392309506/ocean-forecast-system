@@ -14,6 +14,7 @@
         </label>
         <button @click="loadData">刷新</button>
       </div>
+      <p class="meta" v-if="errorMessage">{{ errorMessage }}</p>
       <p class="meta">{{ summary }}</p>
       <div class="table-wrap">
         <table>
@@ -43,6 +44,7 @@ import { fetchGridData } from '../api/oceanApi';
 
 const dataType = ref('temperature');
 const grid = ref(null);
+const errorMessage = ref('');
 
 const summary = computed(() => {
   if (!grid.value) return '尚未加载数据';
@@ -65,8 +67,14 @@ const sampledRows = computed(() => {
 });
 
 async function loadData() {
-  const res = await fetchGridData({ dataType: dataType.value });
-  grid.value = res.data;
+  try {
+    errorMessage.value = '';
+    const res = await fetchGridData({ dataType: dataType.value });
+    grid.value = res.data;
+  } catch (error) {
+    grid.value = null;
+    errorMessage.value = '空间分布数据加载失败，请检查后端服务和数据库初始化状态';
+  }
 }
 
 onMounted(loadData);

@@ -6,6 +6,8 @@ import com.ocean.forecast.entity.OceanData;
 import com.ocean.forecast.entity.OceanSeriesRecord;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -13,17 +15,23 @@ import java.util.List;
 @Mapper
 public interface OceanDataMapper {
 
-        @Select("SELECT longitude, latitude, data_type, data_value AS value, unit, data_time " +
+        @Select("SELECT longitude, latitude, data_type, data_value, unit, data_time " +
                         "FROM ocean_grid_data " +
                         "WHERE data_type = #{dataType} " +
                         "AND data_time = (SELECT MAX(data_time) FROM ocean_grid_data WHERE data_type = #{dataType}) " +
                         "ORDER BY latitude, longitude")
+        @Results({
+                        @Result(column = "data_value", property = "value")
+        })
         List<OceanGridRecord> selectGridRows(@Param("dataType") String dataType);
 
-        @Select("SELECT longitude, latitude, data_type, data_value AS value, unit, data_time " +
+        @Select("SELECT longitude, latitude, data_type, data_value, unit, data_time " +
                         "FROM ocean_timeseries_data " +
                         "WHERE longitude = #{longitude} AND latitude = #{latitude} AND data_type = #{dataType} " +
                         "ORDER BY data_time DESC LIMIT 24")
+        @Results({
+                        @Result(column = "data_value", property = "value")
+        })
         List<OceanSeriesRecord> selectTimeSeriesRows(
                         @Param("longitude") Double longitude,
                         @Param("latitude") Double latitude,

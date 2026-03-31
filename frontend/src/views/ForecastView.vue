@@ -13,6 +13,8 @@
         <span class="badge">置信区间 {{ forecast.confidenceLower }} ~ {{ forecast.confidenceUpper }}</span>
       </div>
 
+      <p class="meta" v-if="errorMessage">{{ errorMessage }}</p>
+
       <ul class="timeline" v-if="forecast">
         <li v-for="(time, idx) in forecast.forecastTimes" :key="time">
           <strong>T+{{ idx * 6 }}h</strong> {{ time }}
@@ -29,13 +31,20 @@ import { fetchForecastData } from '../api/oceanApi';
 const region = ref('东海');
 const forecastHours = ref(72);
 const forecast = ref(null);
+const errorMessage = ref('');
 
 async function loadForecast() {
-  const res = await fetchForecastData({
-    region: region.value,
-    forecastHours: forecastHours.value
-  });
-  forecast.value = res.data;
+  try {
+    errorMessage.value = '';
+    const res = await fetchForecastData({
+      region: region.value,
+      forecastHours: forecastHours.value
+    });
+    forecast.value = res.data;
+  } catch (error) {
+    forecast.value = null;
+    errorMessage.value = '预报数据加载失败，请检查后端服务与数据库表是否完整';
+  }
 }
 
 loadForecast();

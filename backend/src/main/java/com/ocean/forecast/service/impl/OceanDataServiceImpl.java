@@ -122,7 +122,12 @@ public class OceanDataServiceImpl implements OceanDataService {
 
     @Override
     public ForecastResult getForecastResult(String region, Integer forecastHours) {
-        ForecastMetaRecord meta = oceanDataMapper.selectForecastMeta(region, forecastHours);
+        ForecastMetaRecord meta;
+        try {
+            meta = oceanDataMapper.selectForecastMeta(region, forecastHours);
+        } catch (Exception ex) {
+            meta = null;
+        }
         List<String> forecastTimes = new ArrayList<>();
         List<GridData> gridDataList = new ArrayList<>();
 

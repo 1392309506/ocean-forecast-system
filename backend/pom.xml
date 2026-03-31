@@ -59,12 +59,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>edu.ucar</groupId>
-            <artifactId>cdm-core</artifactId>
-            <version>5.5.3</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
